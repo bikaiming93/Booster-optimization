@@ -19,6 +19,7 @@ Next update will do:
 (3) try using code to generate future booster allocation csv
 
 #############################################
+
 0728 update, uploading booster data & willingness folder
 (1) extract & visualize CDC vaccine & booster data in County and State level
 (2) Calculate the 1st and 2nd booster willingness in TX state based on these data
