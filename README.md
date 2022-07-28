@@ -17,3 +17,8 @@ Next update will do:
 (1) comfrim beta update logic; 
 (2) improve the random seeds generating method through rnd_stream & seed_read from data process folder;
 (3) try using code to generate future booster allocation csv
+
+#############################################
+0728 update, uploading booster data & willingness folder
+(1) extract & visualize CDC vaccine & booster data in County and State level
+(2) Calculate the 1st and 2nd booster willingness in TX state based on these data
