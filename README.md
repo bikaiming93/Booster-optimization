@@ -23,3 +23,8 @@ Next update will do:
 0728 update, uploading booster data & willingness folder
 (1) extract & visualize CDC vaccine & booster data in County and State level
 (2) Calculate the 1st and 2nd booster willingness in TX state based on these data
+
+#############################################
+
+0801 update, uploading the KB_write_seed.py
+Which could generate mutiple seed.p files, as the test set for different scnarios for the future variant
