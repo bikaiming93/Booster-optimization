@@ -26,7 +26,7 @@ Next update will do:
 
 #############################################
 
-0801 update, uploading the KB_write_seed.py
+0801 update, uploading the KB_write_seed.py in data_processing folder
 
 Currently, 100 files(for 100 scenarios) * 100 random number follow uniform distribution each file
 
@@ -40,4 +40,8 @@ Which could generate mutiple seed.p files, as the test set for different scnario
 
 (2) main_allocation.py, update the load seeds using load_seeds2 function, only load one seed.p file (1*100), the train_seeds is reversed test_seeds.
 
-(3)
+(3) threshold_policy.py, update the policy_multi_iterator function, originally, it return seeds=-1; currently, it will return the seed extracted by args.
+
+(4) policy_search_functions.oy, update the implement of the policy_multi_iterator function, add unique_seeds_ori as a part of the function input.
+
+(5) 
