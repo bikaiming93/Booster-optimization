@@ -42,6 +42,6 @@ Which could generate mutiple seed.p files, as the test set for different scnario
 
 (3) threshold_policy.py, update the policy_multi_iterator function, originally, it return seeds=-1; currently, it will return the seed extracted by args.
 
-(4) policy_search_functions.oy, update the implement of the policy_multi_iterator function, add unique_seeds_ori as a part of the function input.
+(4) policy_search_functions.py, update the implement of the policy_multi_iterator function, add unique_seeds_ori as a part of the function input.
 
-(5) 
+(5) SEIYARD.py, update the 0608 updates in generation new variants(2.1-2.5), with the extract seed logic.
