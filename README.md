@@ -31,3 +31,10 @@ Next update will do:
 Currently, 100 files(for 100 scenarios) * 100 random number follow uniform distribution each file
 
 Which could generate mutiple seed.p files, as the test set for different scnarios for the future variant
+
+#############################################
+
+0802 update, load random seed through args on SEIYARD success:
+
+(1) instances\_init_.py, define a new load_seeds2 function, (maybe windows & apple system have different directory logic, load_seeds doesnt work on my PC).
+(2)
