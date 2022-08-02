@@ -43,7 +43,7 @@ def immune_escape(immune_escape_rate, t, types, v_policy, step_size):
             v_policy._vaccine_groups[3].S[t+1] +=  moving_people
  
 
-def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwargs):
+def simulate_vaccine(instance, policy, interventions, v_policy, seed, **kwargs):
     '''
     Simulates an SIR-type model with seven compartments, multiple age groups,
     and risk different age groups:
@@ -91,13 +91,15 @@ def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwarg
     if config['det_history']:
         types = 'float'
     else:
-        types = 'int' if seed >= 0 else 'float'
+        types = 'float'
+        #types = 'int' if seed[0] >= 0 else 'float'
 
     # Random stream for stochastic simulations
     if config["det_param"]:
         rnd_epi = None
     else:
-        rnd_epi = np.random.RandomState(seed) if seed >= 0 else None
+        rnd_epi = None
+        #rnd_epi = np.random.RandomState(seed[1]) if seed[1] >= 0 else None
         
     epi = instance.epi
     epi_orig = copy.deepcopy(epi)
@@ -120,7 +122,8 @@ def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwarg
     T_delta = np.where(np.array(v_policy._instance.cal.calendar) == instance.delta_start)[0][0]
     T_omicron = np.where(np.array(v_policy._instance.cal.calendar) == instance.omicron_start)[0][0]
     T_variant_es= np.where(np.array(v_policy._instance.cal.calendar) == instance.variant_start)[0][0]
-    T_variant= T_variant_es+int((180)*(np.random.RandomState(seed) if seed >= 0 else 0))
+    seed2=np.random.RandomState(seed[2])
+    T_variant= T_variant_es+int(seed2.uniform(0,180)) 
       
     global prev_matrix
     prev_matrix=np.zeros((T, 4), dtype=types)
@@ -128,9 +131,8 @@ def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwarg
     for t in range(T - 1):
         if t>= T_variant:
             t1=int(t-T_variant)
-            seed2=int(seed+t)
-            random.seed(seed2)
-            prev_matrix[t][3]=max(random.uniform(instance.delta_prev[t1], instance.omicron_prev[t1]),prev_matrix[t-1][3])
+            seed3=np.random.RandomState(seed[3])
+            prev_matrix[t][3]=max(seed3.uniform(instance.delta_prev[t1], instance.omicron_prev[t1]),prev_matrix[t-1][3])
             #prev for new varint 
             prev_matrix[t][2]=1-prev_matrix[t][3]
             #prev for omicron variant
@@ -198,16 +200,26 @@ def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwarg
             if v_group.v_name == 'v_3':
                 S3=v_policy._vaccine_groups[3].S
                 
-            S += v_group.S
-            E += v_group.E
-            IA += v_group.IA
-            IY += v_group.IY
-            PA += v_group.PA
-            PY += v_group.PY
-            IH += v_group.IH
-            ICU += v_group.ICU
-            R += v_group.R
-            D += v_group.D
+            #S +=v_group.S
+            np.add(S,v_group.S,out=S,casting="unsafe")
+            #E += v_group.E
+            np.add(E,v_group.E,out=E,casting="unsafe")
+            #IA += v_group.IA
+            np.add(IA,v_group.IA,out=IA,casting="unsafe")
+            #IY += v_group.IY
+            np.add(IY,v_group.IY,out=IY,casting="unsafe")
+            #PA += v_group.PA
+            np.add(PA,v_group.PA,out=PA,casting="unsafe")
+            #PY += v_group.PY
+            np.add(PY,v_group.PY,out=PY,casting="unsafe")
+            #IH += v_group.IH
+            np.add(IH,v_group.IH,out=IH,casting="unsafe")
+            #ICU += v_group.ICU
+            np.add(ICU,v_group.ICU,out=ICU,casting="unsafe")
+            #R += v_group.R
+            np.add(R,v_group.R,out=R,casting="unsafe")
+            #D += v_group.D
+            np.add(D,v_group.D,out=D,casting="unsafe")
             
             # Update daily values
             IYIH += v_group.IYIH
@@ -295,7 +307,7 @@ def simulate_vaccine(instance, policy, interventions, v_policy, seed=-1, **kwarg
     return output
 
 
-def simulate_t(instance, v_policy, policy, interventions, t_date, epi_rand, epi_orig, rnd_stream, seed=-1,  **kwargs):
+def simulate_t(instance, v_policy, policy, interventions, t_date, epi_rand, epi_orig, rnd_stream, seed,  **kwargs):
         
         T, A, L = instance.T, instance.A, instance.L
         N = instance.N
@@ -316,7 +328,8 @@ def simulate_t(instance, v_policy, policy, interventions, t_date, epi_rand, epi_
         if config['det_history']:
             types = 'float'
         else:
-            types = 'int' if seed >= 0 else 'float'
+            types = 'float'
+            #types = 'int' if seed[0] >= 0 else 'float'
         
                 
         for t_idx in range(1):
@@ -354,10 +367,10 @@ def simulate_t(instance, v_policy, policy, interventions, t_date, epi_rand, epi_
             #print(seed)
             #breakpoint()
             epi.new_variant = False
-            seed3=int(seed+100)
+            seed4=seed[4]
             if t >= T_variant:
                 epi.new_variant = True
-                epi.variant_update_param(prev_matrix[t][3], seed3)
+                epi.variant_update_param(prev_matrix[t][3], seed4)
             
             '''
             # Assume an imaginary new variant in May, 2022:
@@ -528,9 +541,8 @@ def simulate_t(instance, v_policy, policy, interventions, t_date, epi_rand, epi_
             
             if t == T_variant:
                 # Move almost half of the people from recovered to susceptible:
-                seed4=int(seed+200)   
-                random.seed(seed4)                
-                immune_escape(random.uniform(0.1,0.3), t, types, v_policy, step_size)
+                seed5=np.random.RandomState(seed[5])   
+                immune_escape(seed5.uniform(0.1,0.3), t, types, v_policy, step_size)
          
             if t >= v_policy._vaccines.vaccine_start_time:
                 S_before = np.zeros((5, 2))
@@ -640,6 +652,9 @@ def rv_gen(rnd_stream, n, p, round_opt=1):
             return rnd_stream.binomial(nInt.astype(int), p)
         else:
             return rnd_stream.binomial(n, p)
+
+#np.random.RandomState(seed)
+#seed_list=rnd_stream.unifrom(100)
 
 
 def system_simulation(mp_sim_input):
