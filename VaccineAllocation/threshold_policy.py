@@ -89,6 +89,7 @@ def policy_multi_iterator(instance,
                           vaccines,
                           obj_fun,
                           interventions,
+                          simulation_seeds,
                           policy_class='constant', 
                           community_transmision='green',
                           fixed_policy=None,
@@ -121,6 +122,10 @@ def policy_multi_iterator(instance,
                                           vals: [val1, val2, val3]
                                         }
     '''
+    if not len(simulation_seeds):
+        simulation_seeds=-1
+    print(simulation_seeds)
+    
     first_day_month_index = defaultdict(int)
     first_day_month_index.update({(d.month, d.year): t for t, d in enumerate(instance.cal.calendar) if (d.day == 1)})
     z_ini, SD_state, feasible_interventions = run_multi_calendar(instance, tiers, interventions)
@@ -165,18 +170,18 @@ def policy_multi_iterator(instance,
                 mt_policy = MultiTierPolicy_ACS(instance, tiers, thrs, acs_thrs, acs_length, acs_lead_time, acs_Q, acs_type)
                 mt_policy.set_tier_history(SD_state.copy())
                 mt_policy.set_intervention_history(z_ini.copy())
-                yield instance, mt_policy, obj_fun, interventions, fixed_vaccine_policy, -1, kwargs
+                yield instance, mt_policy, obj_fun, interventions, fixed_vaccine_policy, simulation_seeds, kwargs
         else:
             for thrs in build_multi_tier_policy_candidates(instance, tiers, threshold_type=policy_class, lambda_start=policy_ub):
                 mt_policy = MultiTierPolicy(instance, tiers, thrs, policy_class, community_transmision)
                 mt_policy.set_tier_history(SD_state.copy())
                 mt_policy.set_intervention_history(z_ini.copy())
-                yield instance, mt_policy, obj_fun, interventions, fixed_vaccine_policy, -1, kwargs
+                yield instance, mt_policy, obj_fun, interventions, fixed_vaccine_policy, simulation_seeds, kwargs
     else:   
         fixed_policy.set_tier_history(SD_state.copy())
         fixed_policy.set_intervention_history(z_ini.copy())
         fixed_policy.set_surge_history(SD_state.copy())  
-        yield instance, fixed_policy, obj_fun, interventions, fixed_vaccine_policy, -1, kwargs
+        yield instance, fixed_policy, obj_fun, interventions, fixed_vaccine_policy, simulation_seeds, kwargs
 
        
 def stochastic_iterator(instance,
