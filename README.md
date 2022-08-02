@@ -37,4 +37,7 @@ Which could generate mutiple seed.p files, as the test set for different scnario
 0802 update, load random seed through args on SEIYARD success:
 
 (1) instances\_init_.py, define a new load_seeds2 function, (maybe windows & apple system have different directory logic, load_seeds doesnt work on my PC).
-(2)
+
+(2) main_allocation.py, update the load seeds using load_seeds2 function, only load one seed.p file (1*100), the train_seeds is reversed test_seeds.
+
+(3)
