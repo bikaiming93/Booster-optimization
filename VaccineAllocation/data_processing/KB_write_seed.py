@@ -30,7 +30,7 @@ def write_multi_seeds(number_of_seeds,number_of_data):
     for j in range(number_of_seeds):
         data=[]
         for i in range(number_of_data):
-            raw = random.uniform(0,100)
+            raw = int(random.uniform(0,100))
             data.append(raw)
             
         csp = str(Path(path))
