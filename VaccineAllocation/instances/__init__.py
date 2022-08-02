@@ -266,13 +266,24 @@ def load_vaccines(city, instance, vaccine_file_name = 'vaccines.json', booster_f
     return vaccines
    
 
-def load_seeds(city, seeds_file_name='seeds.p'):
+def load_seeds(city, seeds_file_name):
     # read in the seeds file
     seedsinput = instances_path / f"{city}"
     try:
-        with open(seedsinput / seeds_file_name, 'rb') as infile:
+        with open(seedsinput.parent / seeds_file_name, 'rb') as infile:
             seeds_data = pickle.load(infile)
         return seeds_data[0], seeds_data[1]    
         #return seeds_data['training'], seeds_data['testing']
     except:
-        return [],[]
+        return []
+    
+def load_seeds2(seeds_file_name):
+    open_path=str(instances_path.parent) +"\\" +str(seeds_file_name)
+    print(open_path)
+    try:
+        with open(open_path, 'rb') as infile:
+            seeds_data = pickle.load(infile)
+            #print(seeds_data)
+        return seeds_data    
+    except:
+        return []
