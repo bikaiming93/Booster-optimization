@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # Adjust paths
     change_paths(args)
     
-    from instances import load_instance, load_tiers, load_seeds, load_vaccines
+    from instances import load_instance, load_tiers, load_seeds, load_seeds2, load_vaccines
     from objective_functions import multi_tier_objective
     from trigger_policies import MultiTierPolicy as MTP
     from trigger_policies import CDCTierPolicy as CTP
@@ -20,7 +20,8 @@ if __name__ == '__main__':
     
     # Parse city and get corresponding instance
     instance = load_instance(args.city, setup_file_name=args.f, transmission_file_name=args.tr, hospitalization_file_name=args.hos)
-    train_seeds, test_seeds = load_seeds(args.city, args.seed)
+    test_seeds = load_seeds2(args.seed)
+    train_seeds= load_seeds2(args.seed).reverse()
     tiers = load_tiers(args.city, tier_file_name=args.t)
     vaccines = load_vaccines(args.city, instance, vaccine_file_name=args.v, booster_file_name = args.v_boost, vaccine_allocation_file_name = args.v_allocation)
     # TODO Read command line args for n_proc for better integration with crunch
